@@ -27,7 +27,7 @@ def get_reddit_ai_posts():
         print(f"Fetching from r/{sub}...")
         try:
             subreddit = reddit.subreddit(sub)
-            for post in subreddit.top(time_filter="week", limit=5):
+            for post in subreddit.top(time_filter="week", limit=3):
                 if post.score < 50 or post.stickied:
                     continue
 
@@ -46,7 +46,7 @@ def get_reddit_ai_posts():
 
 
 
-KEYWORDS = ["AI", "ML", "AGI", "robot", "OpenAI", "Google" , "Meta" , "Startup" , "Anthropic", "future", "transformer"]
+KEYWORDS = ["AI", "ML", "AGI", "robot", "OpenAI", "Google" , "Meta" , "Startup" , "future", "transform"]
 
 def get_hackernews_ai():
     url = "https://hn.algolia.com/api/v1/search?tags=story&hitsPerPage=50"
@@ -84,13 +84,13 @@ def get_arxiv_ml():
     feed = feedparser.parse(feed_url)
     news = []
 
-    for entry in feed.entries[:10]:
+    for entry in feed.entries[:5]:
         news.append({
             "source": "arXiv ML",
             "title": entry.title,
             "url": entry.link,
             "date": entry.published,
-            "summary": summarize_post(entry.title, entry.url)
+            "summary": summarize_post(entry.title, entry.link)
         })
 
     return news
@@ -107,7 +107,7 @@ def get_openai_blog():
             "title": entry.title,
             "url": entry.link,
             "date": entry.published,
-            "summary": summarize_post(entry.title, entry.url)
+            "summary": summarize_post(entry.title, entry.link)
         })
 
     return news
@@ -124,7 +124,7 @@ def get_google_ai_blog():
             "title": entry.title,
             "url": entry.link,
             "date": entry.published,
-            "summary": summarize_post(entry.title, entry.url)
+            "summary": summarize_post(entry.title, entry.link)
         })
 
     return news
@@ -141,7 +141,7 @@ def get_huggingface_blog():
             "title": entry.title,
             "url": entry.link,
             "date": entry.published,
-            "summary": summarize_post(entry.title, entry.url)
+            "summary": summarize_post(entry.title, entry.link)
         })
 
     return news

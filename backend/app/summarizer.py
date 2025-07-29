@@ -1,30 +1,26 @@
-import openai
 import os
+from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def summarize_post(title, url):
-    prompt = f"""
-You are an AI assistant for a college student learning AI.
-
-Summarize the following post.
-Then explain why it's important, in a simple way that a college computer science student would understand.
-
-Title: "{title}"
-Link: {url}
-"""
-
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.5
+            messages=[
+                {"role": "system", "content": "Summarize the article at the given URL in simple language for a college CS student. Include why it matters."},
+                {"role": "user", "content": f"Title: {title}\nURL: {url}"}
+            ],
+            temperature=0.7
         )
 
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content.strip()
 
     except Exception as e:
-        print(f" GPT summarization failed for {title}: {e}")
-        return "Summary not available."
+        print(f"GPT summarization failed for {title}: {e}")
+        return None
+
+
